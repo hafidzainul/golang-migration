@@ -1,30 +1,14 @@
 package main
 
 import (
+	"fmt"
 	"io/ioutil"
 	"log"
 	"strings"
 )
 
-// ConfigDB variable
-var ConfigDB DBConfig
-
 // SQLString Variable
 type SQLString string
-
-// DBConfig struct
-type DBConfig struct {
-	Username string
-	Password string
-	Host     string
-	Port     string
-	Name     string
-}
-
-// InitMigration function
-func InitMigration(conf DBConfig) {
-	ConfigDB = conf
-}
 
 // ReadSQL function
 func ReadSQL(path string) *[]SQLString {
@@ -44,7 +28,9 @@ func ReadSQL(path string) *[]SQLString {
 			log.Fatal(err)
 		}
 
-		requests = strings.Split(string(file), ";")
+		reqs := strings.Split(string(file), ";\n")
+
+		requests = append(requests, reqs...)
 
 	}
 
@@ -52,8 +38,6 @@ func ReadSQL(path string) *[]SQLString {
 
 	for index, request := range requests {
 		sqlStrings[index] = SQLString(request)
-		// result, err := db.Exec(request)
-		// do whatever you need with result and error
 	}
 
 	return &sqlStrings
@@ -61,8 +45,19 @@ func ReadSQL(path string) *[]SQLString {
 
 // RunSQL function
 func RunSQL(sqlStrings *[]SQLString) {
-	// for index, string := range *sqlStrings {
-	// result, err := db.Exec(request)
-	// do whatever you need with result and error
-	// }
+	for index, query := range *sqlStrings {
+		log.Println("Query (" + fmt.Sprint(index) + ") of " + fmt.Sprint(len(*sqlStrings)))
+		log.Println("Executing query:", string(query))
+
+		tx := Connection().Begin()
+
+		if err := tx.Exec(string(query)).Error; err != nil {
+			log.Fatal(err)
+			tx.Rollback()
+		} else {
+			tx.Commit()
+			log.Println("Successfully run query")
+		}
+
+	}
 }
