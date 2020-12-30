@@ -1,4 +1,4 @@
-module golang-migration
+module github.com/hafidzainul/golang-migration
 
 go 1.15
 
