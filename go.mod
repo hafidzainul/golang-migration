@@ -1,4 +1,4 @@
-module MysqlMigration
+module golang-migration
 
 go 1.15
 
