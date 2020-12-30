@@ -1,4 +1,4 @@
-package main
+package golangmigration
 
 import (
 	"fmt"
@@ -24,8 +24,7 @@ func InitMigration(conf DBConfig) {
 	ConfigDB = conf
 }
 
-// Connection function
-func Connection() *gorm.DB {
+func connection() *gorm.DB {
 	var conn string
 
 	conn = ConfigDB.Username + ":" + ConfigDB.Password + "@tcp(" + ConfigDB.Host + ":" + ConfigDB.Port + ")/" + ConfigDB.Name + "?charset=utf8mb4&parseTime=True&loc=Local"

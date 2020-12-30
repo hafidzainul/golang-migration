@@ -1,4 +1,4 @@
-package main
+package golangmigration
 
 import (
 	"fmt"
@@ -49,7 +49,7 @@ func RunSQL(sqlStrings *[]SQLString) {
 		log.Println("Query (" + fmt.Sprint(index) + ") of " + fmt.Sprint(len(*sqlStrings)))
 		log.Println("Executing query:", string(query))
 
-		tx := Connection().Begin()
+		tx := connection().Begin()
 
 		if err := tx.Exec(string(query)).Error; err != nil {
 			log.Fatal(err)

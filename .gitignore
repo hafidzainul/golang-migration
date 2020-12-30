@@ -2,3 +2,4 @@
 sqlFile
 sqlFile/*
 main.go
+go.sum
